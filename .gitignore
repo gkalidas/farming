@@ -1,0 +1,32 @@
+# database
+*.db
+*.db-shm
+*.db-wal
+
+# uploads (user photos — not committed)
+uploads/
+
+# trained models (large binary files)
+models/*.onnx
+models/*.pt
+
+# local Claude settings (personal, not for repo)
+.claude/settings.local.json
+
+# env
+.env
+.venv
+venv/
+envs/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# logs
+*.log
+
+# OS
+.DS_Store
