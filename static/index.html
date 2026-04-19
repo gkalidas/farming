@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Khetai — Crop Advisor</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">🌱 Khetai</div>
+  <div id="status-dots">
+    <span class="dot" id="dot-ollama" title="Ollama"></span>
+    <span class="dot" id="dot-weather" title="Weather"></span>
+  </div>
+</header>
+
+<main>
+  <!-- ── Upload card ── -->
+  <section class="card" id="upload-card">
+    <div class="card-title">Analyse your crop</div>
+
+    <div class="row">
+      <label class="field">
+        <span>Crop</span>
+        <select id="crop-select">
+          <option value="pomegranate">Pomegranate</option>
+          <option value="tomato">Tomato</option>
+          <option value="grape">Grape</option>
+          <option value="onion">Onion</option>
+          <option value="cotton">Cotton</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Location <small>(optional)</small></span>
+        <input type="text" id="location-input" placeholder="e.g. Solapur, IN">
+      </label>
+    </div>
+
+    <label class="upload-zone" id="upload-zone" for="file-input">
+      <div id="preview-wrap">
+        <div class="upload-icon">📷</div>
+        <div class="upload-hint">Tap to take photo or choose file</div>
+      </div>
+      <img id="preview-img" hidden>
+    </label>
+    <input type="file" id="file-input" accept="image/*" capture="environment" hidden>
+
+    <button class="btn-primary" id="analyse-btn" disabled>Analyse</button>
+  </section>
+
+  <!-- ── Result card ── -->
+  <section class="card" id="result-card" hidden>
+    <div class="result-header">
+      <div>
+        <div class="condition-name" id="r-condition"></div>
+        <div class="crop-label" id="r-crop"></div>
+      </div>
+      <div class="severity-badge" id="r-severity"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">What to do now</div>
+    <ol class="action-list" id="r-actions"></ol>
+
+    <div class="section-title">Avoid</div>
+    <ul class="avoid-list" id="r-avoid"></ul>
+
+    <div class="section-title">Watch for</div>
+    <ul class="watch-list" id="r-watch"></ul>
+
+    <div id="r-weather-block" hidden>
+      <div class="section-title">Weather note</div>
+      <div class="weather-note" id="r-weather"></div>
+    </div>
+
+    <div class="section-title">Timeline</div>
+    <div class="timeline-note" id="r-timeline"></div>
+
+    <div class="module-pills" id="r-modules"></div>
+
+    <button class="btn-secondary" id="new-btn">New analysis</button>
+  </section>
+
+  <!-- ── History ── -->
+  <section class="card" id="history-card">
+    <div class="card-title toggle-title" id="history-toggle">
+      Recent analyses <span id="history-chevron">▼</span>
+    </div>
+    <div id="history-list" hidden></div>
+  </section>
+</main>
+
+<!-- Loading overlay -->
+<div id="overlay" hidden>
+  <div class="spinner"></div>
+  <div class="overlay-text" id="overlay-text">Analysing…</div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
