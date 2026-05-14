@@ -1,0 +1,10 @@
+# Training only — install separately from the main app
+# python -m venv venv_train && source venv_train/bin/activate
+# pip install -r train/requirements.txt
+
+torch>=2.2.0
+torchvision>=0.17.0
+scikit-learn>=1.4.0
+kaggle>=1.6.0
+onnx>=1.16.0
+Pillow>=10.0.0
