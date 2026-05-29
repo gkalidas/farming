@@ -97,15 +97,10 @@ def run_eval(data_dir: Path | None, crop: str, model_path: Path, log_path: Path)
     if data_dir and data_dir.exists():
         print(f"\n── Kaggle held-out set ({data_dir}) ──")
         image_paths = []
-        for cls_dir in sorted(data_dir.iterdir()):
-            if not cls_dir.is_dir():
-                continue
-            cls_name = cls_dir.name.replace("_", " ").title()
-            # try to match to known label (case-insensitive)
-            matched = next(
-                (l for l in labels if l.lower().replace(" ", "_") == cls_dir.name.lower()),
-                cls_name
-            )
+        cls_dirs = sorted([d for d in data_dir.iterdir() if d.is_dir()])
+        for idx, cls_dir in enumerate(cls_dirs):
+            # Use sorted folder index → label (matches ImageFolder ordering used during training)
+            matched = labels[idx] if idx < len(labels) else cls_dir.name.replace("_", " ").title()
             imgs = list(cls_dir.glob("*.jpg")) + list(cls_dir.glob("*.jpeg")) + list(cls_dir.glob("*.png"))
             # use last 20% as test split (same seed as fine_tune.py)
             n_test = max(1, int(len(imgs) * 0.2))

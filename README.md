@@ -48,8 +48,8 @@ ollama pull llama3:latest
 
 ### 3. Clone and install
 ```bash
-git clone https://github.com/gkalidas/khetai.git
-cd khetai
+git clone https://github.com/gkalidas/farming.git
+cd farming
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
