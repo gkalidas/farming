@@ -8,6 +8,7 @@ uploads/
 
 # trained models (large binary files)
 models/*.onnx
+models/*.onnx.data
 models/*.pt
 
 # local Claude settings (personal, not for repo)
