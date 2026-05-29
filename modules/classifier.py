@@ -5,22 +5,24 @@ import numpy as np
 
 from .base import BaseModule, ModuleContext
 
-# Labels match the Kaggle pomegranate dataset (5 classes)
-# Update this dict when you fine-tune on a new crop
-# Maps crop → ordered list of class names (must match ImageFolder sorted order = alphabetical)
-# Folder names in dataset → display names used here
+# Labels must match ImageFolder sorted folder order (alphabetical) in the training dataset.
+# Folder names in combined_7class → display names used here:
 #   Alternaria        → Alternaria Fruit Spot
-#   Anthracnose       → Anthracnose
+#   Anthracnose       → Anthracnose          (includes Colletotrichum spp from Halabja)
 #   Bacterial_Blight  → Bacterial Blight
 #   Cercospora        → Cercospora Fruit Spot
-#   Healthy           → Healthy
+#   Ectomyelois       → Fruit Borer
+#   Healthy           → Healthy              (Kaggle + Halabja merged)
+#   Sunburn           → Sunburn
 CROP_LABELS: dict[str, list[str]] = {
     "pomegranate": [
-        "Alternaria Fruit Spot",   # alphabetical: Alternaria < Anthracnose
-        "Anthracnose",
-        "Bacterial Blight",
-        "Cercospora Fruit Spot",
-        "Healthy",
+        "Alternaria Fruit Spot",   # Alternaria
+        "Anthracnose",             # Anthracnose
+        "Bacterial Blight",        # Bacterial_Blight
+        "Cercospora Fruit Spot",   # Cercospora
+        "Fruit Borer",             # Ectomyelois
+        "Healthy",                 # Healthy
+        "Sunburn",                 # Sunburn
     ],
 }
 

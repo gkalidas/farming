@@ -33,11 +33,13 @@ sys.path.insert(0, str(ROOT))
 # ── labels: must match classifier.py CROP_LABELS (alphabetical folder order) ─
 LABELS: dict[str, list[str]] = {
     "pomegranate": [
-        "Alternaria Fruit Spot",
-        "Anthracnose",
-        "Bacterial Blight",
-        "Cercospora Fruit Spot",
-        "Healthy",
+        "Alternaria Fruit Spot",   # Alternaria
+        "Anthracnose",             # Anthracnose
+        "Bacterial Blight",        # Bacterial_Blight
+        "Cercospora Fruit Spot",   # Cercospora
+        "Fruit Borer",             # Ectomyelois
+        "Healthy",                 # Healthy
+        "Sunburn",                 # Sunburn
     ],
 }
 

@@ -23,6 +23,18 @@ def init():
             fetched_at TEXT NOT NULL,
             data_json  TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS crop_plots (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at  TEXT    NOT NULL,
+            crop        TEXT    NOT NULL,
+            location    TEXT    NOT NULL,
+            planted_at  TEXT    NOT NULL,
+            lat         REAL,
+            lon         REAL,
+            notes       TEXT    DEFAULT '',
+            history_json TEXT   DEFAULT NULL
+        );
     """)
     con.commit()
     con.close()
