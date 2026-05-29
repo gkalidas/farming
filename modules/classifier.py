@@ -30,10 +30,23 @@ CROP_LABELS: dict[str, list[str]] = {
 _MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 _STD  = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
+# Uncertainty gates — either condition triggers an "unrecognised disease" warning.
+# Known diseases score 97-100% confidence; 0.65 is a conservative floor.
+# Normalised entropy > 0.5 means probability is too spread to trust the top class.
+_CONF_THRESHOLD    = 0.65
+_ENTROPY_THRESHOLD = 0.50   # fraction of max entropy (0→certain, 1→uniform)
+
 
 def _softmax(x: np.ndarray) -> np.ndarray:
     e = np.exp(x - x.max())
     return e / e.sum()
+
+
+def _norm_entropy(probs: np.ndarray) -> float:
+    n   = len(probs)
+    eps = 1e-9
+    H   = -float(np.sum(probs * np.log(probs + eps)))
+    return H / np.log(n)   # normalise to [0, 1]
 
 
 class ClassifierModule(BaseModule):
@@ -100,13 +113,28 @@ class ClassifierModule(BaseModule):
                 key=lambda x: -x[1],
             )[:3]
 
+            entropy     = _norm_entropy(probs)
+            uncertain   = conf < _CONF_THRESHOLD or entropy > _ENTROPY_THRESHOLD
+
+            if uncertain:
+                summary = (
+                    f"Classifier: unrecognised condition — closest match '{label}' "
+                    f"({conf:.0%} confidence, entropy {entropy:.2f}). "
+                    f"May be a disease outside the model's training. "
+                    f"Advise farmer to consult a local agricultural expert."
+                )
+            else:
+                summary = f"Classifier: {label} ({conf:.0%} confidence)"
+
             return ModuleContext(
                 module_name=self.name,
                 available=True,
-                summary=f"Classifier: {label} ({conf:.0%} confidence)",
+                summary=summary,
                 detail={
                     "condition":   label,
                     "confidence":  conf,
+                    "entropy":     round(entropy, 3),
+                    "uncertain":   uncertain,
                     "top3":        top3,
                 },
             )
