@@ -7,4 +7,5 @@ torchvision>=0.17.0
 scikit-learn>=1.4.0
 kaggle>=1.6.0
 onnx>=1.16.0
+onnxscript>=0.1.0
 Pillow>=10.0.0
