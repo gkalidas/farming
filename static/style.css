@@ -215,13 +215,33 @@ input[type=text]:focus, select:focus { border-color: var(--green-dim); }
 .avoid-list  li { color: #f07070; }
 .watch-list  li { color: var(--amber); }
 
-.weather-note, .timeline-note {
+.weather-note, .timeline-note, .soil-note, .root-note {
   background: var(--surface2);
   border-left: 3px solid var(--green-dim);
   border-radius: 0 6px 6px 0;
   padding: 9px 12px;
   font-size: 13px;
   color: var(--dim);
+}
+
+.spray-note {
+  background: #2a1e00;
+  border-left: 3px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--amber);
+}
+
+.uncertainty-banner {
+  background: #3d1010;
+  border: 1px solid #7a1a1a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #f07070;
+  margin-bottom: 14px;
+  line-height: 1.5;
 }
 
 .module-pills {

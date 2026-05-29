@@ -38,6 +38,15 @@
       </label>
     </div>
 
+    <div class="row">
+      <label class="field">
+        <span>Plot <small>(optional — links crop history)</small></span>
+        <select id="plot-select">
+          <option value="">— no plot —</option>
+        </select>
+      </label>
+    </div>
+
     <label class="upload-zone" id="upload-zone" for="file-input">
       <div id="preview-wrap">
         <div class="upload-icon">📷</div>
@@ -52,6 +61,12 @@
 
   <!-- ── Result card ── -->
   <section class="card" id="result-card" hidden>
+    <!-- uncertainty banner — shown only when model is unsure -->
+    <div class="uncertainty-banner" id="r-uncertainty" hidden>
+      ⚠️ This condition was not recognised by the model. The closest match is shown below.
+      Please consult a local KVK (Krishi Vigyan Kendra) before acting.
+    </div>
+
     <div class="result-header">
       <div>
         <div class="condition-name" id="r-condition"></div>
@@ -65,6 +80,11 @@
     <div class="section-title">What to do now</div>
     <ol class="action-list" id="r-actions"></ol>
 
+    <div id="r-spray-block" hidden>
+      <div class="section-title">Spray timing</div>
+      <div class="spray-note" id="r-spray"></div>
+    </div>
+
     <div class="section-title">Avoid</div>
     <ul class="avoid-list" id="r-avoid"></ul>
 
@@ -74,6 +94,16 @@
     <div id="r-weather-block" hidden>
       <div class="section-title">Weather note</div>
       <div class="weather-note" id="r-weather"></div>
+    </div>
+
+    <div id="r-soil-block" hidden>
+      <div class="section-title">Soil &amp; moisture</div>
+      <div class="soil-note" id="r-soil"></div>
+    </div>
+
+    <div id="r-root-block" hidden>
+      <div class="section-title">Root check</div>
+      <div class="root-note" id="r-root"></div>
     </div>
 
     <div class="section-title">Timeline</div>
@@ -90,6 +120,46 @@
       Recent analyses <span id="history-chevron">▼</span>
     </div>
     <div id="history-list" hidden></div>
+  </section>
+
+  <!-- ── Plots ── -->
+  <section class="card" id="plots-card">
+    <div class="card-title toggle-title" id="plots-toggle">
+      My plots <span id="plots-chevron">▼</span>
+    </div>
+    <div id="plots-body" hidden>
+      <div id="plots-list"></div>
+
+      <button class="btn-secondary" id="add-plot-btn" style="margin-top:12px">+ Register new plot</button>
+
+      <div id="plot-form" hidden style="margin-top:14px">
+        <div class="divider"></div>
+        <div class="row" style="margin-top:14px">
+          <label class="field">
+            <span>Crop</span>
+            <select id="pf-crop">
+              <option value="pomegranate">Pomegranate</option>
+              <option value="tomato">Tomato</option>
+              <option value="grape">Grape</option>
+              <option value="onion">Onion</option>
+              <option value="cotton">Cotton</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Location</span>
+            <input type="text" id="pf-location" placeholder="e.g. Solapur">
+          </label>
+        </div>
+        <label class="field" style="margin-bottom:12px">
+          <span>Notes <small>(optional)</small></span>
+          <input type="text" id="pf-notes" placeholder="e.g. 5 acres, drip irrigated">
+        </label>
+        <div class="row">
+          <button class="btn-secondary" id="pf-cancel" style="margin-top:0">Cancel</button>
+          <button class="btn-primary" id="pf-submit" style="margin-top:0">Register</button>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 
