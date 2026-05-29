@@ -1,4 +1,4 @@
-# Khetai 🌱 — Local Crop Advisor
+# Farming 🌱 — Local Crop Advisor
 
 Upload a photo of any crop → get a diagnosis, immediate actions, and contextual advice powered by a local vision model. No cloud, no API costs, no connectivity required.
 
