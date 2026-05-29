@@ -9,7 +9,7 @@ from modules.base import ModuleContext
 _KB_DIR = Path(__file__).parent.parent / "crops"
 
 
-def _load_kb(crop: str) -> str:
+def _load_kb(crop: str, condition: str = "") -> str:
     path = _KB_DIR / f"{crop}.json"
     if not path.exists():
         return ""
@@ -21,7 +21,15 @@ def _load_kb(crop: str) -> str:
             f"Region: {kb.get('primary_region','')}",
             f"Dominant variety: {kb.get('dominant_variety','unknown')}",
         ]
-        for disease, info in diseases.items():
+
+        # If a specific condition is known, only include that entry — prevents the LLM
+        # from mixing up spray recipes across diseases.
+        if condition and condition in diseases:
+            entries = {condition: diseases[condition]}
+        else:
+            entries = diseases
+
+        for disease, info in entries.items():
             lines.append(f"\n--- {disease} ---")
             if info.get("causal_agent"):
                 lines.append(f"  Cause: {info['causal_agent']}")
@@ -102,7 +110,14 @@ async def run(crop: str, contexts: list[ModuleContext]) -> dict:
     if not context_block:
         context_block = "No context modules available."
 
-    kb_block = _load_kb(crop)
+    # Extract detected condition from classifier context so we can narrow the KB.
+    detected = ""
+    for c in contexts:
+        if c.module_name == "classifier" and c.available:
+            detected = c.detail.get("condition", "")
+            break
+
+    kb_block = _load_kb(crop, condition=detected)
 
     payload = {
         "model": TEXT_MODEL,
