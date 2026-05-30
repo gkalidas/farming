@@ -73,23 +73,46 @@ analyseBtn.addEventListener('click', async () => {
   const location = $('location-input').value.trim();
   const plotId   = $('plot-select').value;
 
-  showOverlay('Sending to vision model…');
-
-  const fd = new FormData();
-  fd.append('crop',     crop);
-  fd.append('location', location);
-  fd.append('image',    file);
-  if (plotId) fd.append('plot_id', plotId);
+  showOverlay('Sending photo…');
 
   try {
-    const res  = await fetch('/api/analyse', { method: 'POST', body: fd });
+    console.log('[farming] step 1: reading file', file.name, file.size, file.type);
+
+    // Read file into memory first — catches iCloud/network-drive stalls
+    const bytes = await file.arrayBuffer();
+    const blob  = new Blob([bytes], { type: file.type || 'image/jpeg' });
+    console.log('[farming] step 2: file read ok, bytes=', bytes.byteLength);
+
+    const fd = new FormData();
+    fd.append('crop',     crop);
+    fd.append('location', location);
+    fd.append('image',    blob, file.name || 'photo.jpg');
+    if (plotId) fd.append('plot_id', plotId);
+
+    showOverlay('Running disease detection…');
+    console.log('[farming] step 3: sending fetch');
+
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 180_000); // 3-min hard timeout
+
+    let res;
+    try {
+      res = await fetch('/api/analyse', { method: 'POST', body: fd, signal: ctrl.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+
+    console.log('[farming] step 4: response received, status=', res.status);
+    showOverlay('Generating advisory…');
     const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || 'Server error');
+    if (!res.ok) throw new Error((data.detail?.[0]?.msg || data.detail) || 'Server error');
     showResult(data, crop);
     loadHistory();
   } catch (err) {
-    hideOverlay();
-    alert('Analysis failed: ' + err.message);
+    console.error('[farming] error:', err);
+    const msg = err.name === 'AbortError' ? 'Timed out after 3 minutes.' : (err.message || String(err));
+    showOverlay('Error: ' + msg);
+    setTimeout(hideOverlay, 4000);
   }
 });
 
@@ -292,9 +315,12 @@ $('pf-submit').addEventListener('click', async () => {
 
 // ── overlay helpers ───────────────────────────────────────────────────────────
 function showOverlay(msg) {
-  $('overlay-text').textContent = msg || 'Analysing…';
-  $('overlay').hidden = false;
+  const text = $('overlay-text');
+  text.textContent = msg || 'Analysing…';
+  text.style.color = (msg || '').startsWith('Error') ? '#f07070' : '';
+  $('overlay').style.display = 'flex';
 }
 function hideOverlay() {
-  $('overlay').hidden = true;
+  $('overlay').style.display = 'none';
+  $('overlay-text').style.color = '';
 }
